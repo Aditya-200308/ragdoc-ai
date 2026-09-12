@@ -1,0 +1,26 @@
+# Environment variables & secrets
+.env
+.streamlit/secrets.toml
+
+# Python bytecode & caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Local Vector Databases
+chroma_db/
+chroma_db_v2/
+*.sqlite3
+*.parquet
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,26 @@
+[
+  {
+    "strategy": "fixed",
+    "hit_rate": 1.0,
+    "hit_rate_pct": 100.0,
+    "hit_count": 5,
+    "total_questions": 5,
+    "avg_faithfulness": 4.5
+  },
+  {
+    "strategy": "sentence",
+    "hit_rate": 1.0,
+    "hit_rate_pct": 100.0,
+    "hit_count": 5,
+    "total_questions": 5,
+    "avg_faithfulness": 4.5
+  },
+  {
+    "strategy": "semantic",
+    "hit_rate": 1.0,
+    "hit_rate_pct": 100.0,
+    "hit_count": 5,
+    "total_questions": 5,
+    "avg_faithfulness": 4.5
+  }
+]
