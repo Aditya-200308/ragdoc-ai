@@ -624,7 +624,7 @@ with st.sidebar:
         "langchain": "🦜 **LangChain Recursive (Recommended):** Hierarchical paragraph & sentence splitting via RecursiveCharacterTextSplitter for optimal semantic cohesion.",
         "semantic": "🧠 **Semantic:** Dynamically groups text by contextual embedding similarity thresholds.",
         "sentence": "📜 **Sentence-Based:** Preserves natural grammatical sentence boundaries.",
-        "fixed": "⚡ **Fixed-Size (500 chars):** Strict character window baseline with 50-char overlap."
+        "fixed": "⚡ **Fixed-Size (800 chars):** Strict character window baseline with 120-char overlap."
     }
     st.info(descriptions[strategy])
 

@@ -200,13 +200,11 @@ ACCURATE ANSWER:"""
         if api_key_to_use:
             import requests
             models_to_try = [
-                "gemini-3.8-flash",
-                "gemini-3.7-flash",
-                "gemini-3.6-flash",
-                "gemini-3.5-flash",
-                "gemini-flash-latest",
                 "gemini-3.5-flash-lite",
-                "gemini-3.1-flash-lite"
+                "gemini-3.1-flash-lite",
+                "gemini-3.8-flash",
+                "gemini-flash-latest",
+                "gemini-3.5-flash"
             ]
             payload = {
                 "contents": [{"parts": [{"text": prompt_text}]}],
@@ -218,7 +216,7 @@ ACCURATE ANSWER:"""
             for model_name in models_to_try:
                 try:
                     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key_to_use}"
-                    res = requests.post(url, json=payload, timeout=60)
+                    res = requests.post(url, json=payload, timeout=8)
                     if res.status_code == 200:
                         data = res.json()
                         candidates = data.get("candidates", [])

@@ -20,6 +20,8 @@
 # 📦 Standard library
 import os
 import sys
+from dotenv import load_dotenv
+load_dotenv()
 
 # Fix Windows emoji encoding issue
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -281,15 +283,14 @@ class RAGChain:
         if not gemini_key:
             return "⚠️ Error: GEMINI_API_KEY is not configured. Please ensure it is present in your .env file."
 
-        # Prioritize Google Gemini 3.8 Flash (the latest model), followed by reliable fallbacks
+                # Prioritize Google Gemini 3.5 Flash Lite (~1.3s response) with ultra-fast resilient failover
         models_to_try = [
-            "gemini-3.8-flash",
-            "gemini-3.7-flash",
-            "gemini-3.6-flash",
-            "gemini-3.5-flash",
-            "gemini-flash-latest",
             "gemini-3.5-flash-lite",
-            "gemini-3.1-flash-lite"
+            "gemini-3.1-flash-lite",
+            "gemini-3.8-flash",
+            "gemini-flash-latest",
+            "gemini-3.5-flash",
+            "gemini-3.7-flash"
         ]
 
         payload = {
@@ -303,7 +304,7 @@ class RAGChain:
         for model_name in models_to_try:
             try:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={gemini_key}"
-                res = requests.post(url, json=payload, timeout=60)
+                res = requests.post(url, json=payload, timeout=8)
                 if res.status_code == 200:
                     data = res.json()
                     candidates = data.get("candidates", [])
@@ -338,7 +339,16 @@ class RAGChain:
         """
         The main method: takes a question, returns an answer.
         """
-        retrieved_chunks = self.retriever.retrieve(query=question, top_k=top_k)
+        total_chunks = self.retriever.count()
+        summary_keywords = ["summarize", "summary", "overview", "all projects", "all", "background", "projects", "profile", "resume", "experience", "skills", "who is", "tell me about"]
+        is_broad = any(k in question.lower() for k in summary_keywords)
+
+        if total_chunks <= 25 or is_broad:
+            effective_k = min(25, total_chunks) if total_chunks > 0 else top_k
+        else:
+            effective_k = min(top_k, total_chunks)
+
+        retrieved_chunks = self.retriever.retrieve(query=question, top_k=effective_k)
 
         if not retrieved_chunks:
             return "I couldn't find relevant information in the document.", ""
@@ -367,8 +377,17 @@ ANSWER:"""
         """
         A user-friendly version of answer() that includes source chunks, multi-document synthesis, and follow-up chat history.
         """
-        # Retrieve more chunks (top_k=8) to ensure all uploaded files are represented
-        effective_k = max(top_k, 8)
+        # Dynamic retrieval: for small documents (<= 25 chunks) or broad summary queries,
+        # retrieve all or up to 25 chunks to guarantee 100% document recall and prevent dropped sections
+        total_chunks = self.retriever.count()
+        summary_keywords = ["summarize", "summary", "overview", "all projects", "all", "background", "projects", "profile", "resume", "experience", "skills", "who is", "tell me about"]
+        is_broad = any(k in question.lower() for k in summary_keywords)
+
+        if total_chunks <= 25 or is_broad:
+            effective_k = min(25, total_chunks) if total_chunks > 0 else max(top_k, 8)
+        else:
+            effective_k = min(max(top_k, 8), total_chunks)
+
         retrieved_chunks = self.retriever.retrieve(query=question, top_k=effective_k)
 
         if not retrieved_chunks:

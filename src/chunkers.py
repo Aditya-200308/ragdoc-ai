@@ -54,7 +54,7 @@ class FixedSizeChunker:
     the last N characters in the next chunk, so context isn't lost.
     """
 
-    def __init__(self, chunk_size=500, overlap=50):
+    def __init__(self, chunk_size=800, overlap=120):
         # 📖 __init__ = "initialize"
         # This method runs AUTOMATICALLY the moment you create an object.
         # It's like the "setup" instructions for the object.
@@ -334,7 +334,7 @@ class LangChainRecursiveChunker:
     and characters ("") to maximize semantic continuity within chunk budgets.
     """
 
-    def __init__(self, chunk_size=500, overlap=50):
+    def __init__(self, chunk_size=800, overlap=120):
         self.chunk_size = chunk_size
         self.overlap = overlap
         try:
@@ -372,11 +372,11 @@ def get_chunker(strategy_name, embedding_model=None):
     """
     # Maps strategy name strings to chunker class instances
     chunkers = {
-        "fixed":     FixedSizeChunker(chunk_size=500, overlap=50),
+        "fixed":     FixedSizeChunker(chunk_size=800, overlap=120),
         "sentence":  SentenceChunker(sentences_per_chunk=5, overlap_sentences=1),
         "semantic":  SemanticChunker(embedding_model=embedding_model, threshold=0.4),
-        "langchain": LangChainRecursiveChunker(chunk_size=500, overlap=50),
-        "recursive": LangChainRecursiveChunker(chunk_size=500, overlap=50)
+        "langchain": LangChainRecursiveChunker(chunk_size=800, overlap=120),
+        "recursive": LangChainRecursiveChunker(chunk_size=800, overlap=120)
     }
 
     chunker = chunkers.get(strategy_name.lower())

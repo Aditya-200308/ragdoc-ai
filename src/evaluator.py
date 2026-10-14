@@ -194,13 +194,11 @@ Respond with ONLY a single integer (0-5). No explanation."""
             if gemini_key:
                 import re
                 eval_models = [
-                    "gemini-3.8-flash",
-                    "gemini-3.7-flash",
-                    "gemini-3.6-flash",
-                    "gemini-3.5-flash",
-                    "gemini-flash-latest",
                     "gemini-3.5-flash-lite",
-                    "gemini-3.1-flash-lite"
+                    "gemini-3.1-flash-lite",
+                    "gemini-3.8-flash",
+                    "gemini-flash-latest",
+                    "gemini-3.5-flash"
                 ]
                 payload = {
                     "contents": [{"parts": [{"text": grading_prompt}]}],
@@ -212,7 +210,7 @@ Respond with ONLY a single integer (0-5). No explanation."""
                 for m in eval_models:
                     try:
                         url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={gemini_key}"
-                        res = requests.post(url, json=payload, timeout=30)
+                        res = requests.post(url, json=payload, timeout=8)
                         if res.status_code == 200:
                             candidates = res.json().get("candidates", [])
                             if candidates:
