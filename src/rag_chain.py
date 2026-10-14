@@ -210,8 +210,10 @@ class RAGChain:
             for page_number, page in enumerate(doc):
                 page_text = page.get_text()
 
-                # If page text is empty or too short (<30 chars), run OCR on the rendered page image
+                # If page text is empty or too short (<30 chars), run dual-engine OCR (RapidOCR + Gemini Vision fallback)
                 if len(page_text.strip()) < 30:
+                    ocr_text = ""
+                    # Tier 1: High-speed local RapidOCR
                     try:
                         if ocr_engine is None:
                             from rapidocr_onnxruntime import RapidOCR
@@ -222,12 +224,55 @@ class RAGChain:
                         ocr_result, _ = ocr_engine(img_bytes)
 
                         if ocr_result:
-                            ocr_text = "\n".join([line[1] for line in ocr_result if line[1].strip()])
-                            if ocr_text.strip():
-                                print(f"📷 [OCR] Extracted {len(ocr_text)} chars from image/scanned page {page_number+1}")
-                                page_text = ocr_text
+                            extracted = "\n".join([line[1] for line in ocr_result if line[1].strip()])
+                            if extracted.strip():
+                                ocr_text = extracted.strip()
+                                print(f"📷 [RapidOCR] Extracted {len(ocr_text)} chars from scanned page {page_number+1}")
                     except Exception as ocr_err:
-                        print(f"⚠️ OCR warning on page {page_number+1}: {ocr_err}")
+                        print(f"⚠️ RapidOCR unavailable or failed on page {page_number+1}: {ocr_err}")
+
+                    # Tier 2: Cloud Multimodal Vision OCR Fallback (guaranteed cross-platform reliability)
+                    if not ocr_text.strip():
+                        try:
+                            gemini_key = os.environ.get("GEMINI_API_KEY")
+                            if not gemini_key:
+                                try:
+                                    import streamlit as st
+                                    if hasattr(st, "secrets") and "GEMINI_API_KEY" in st.secrets:
+                                        gemini_key = st.secrets["GEMINI_API_KEY"]
+                                except Exception:
+                                    pass
+
+                            if gemini_key:
+                                import base64, requests
+                                pix = page.get_pixmap(dpi=150)
+                                img_bytes = pix.tobytes("png")
+                                b64_img = base64.b64encode(img_bytes).decode("utf-8")
+                                payload = {
+                                    "contents": [{
+                                        "parts": [
+                                            {"text": "Perform precise optical character recognition (OCR) on this scanned document or certificate. Transcribe all text, names, titles, dates, institutions, and signatures accurately without omission."},
+                                            {"inline_data": {"mime_type": "image/png", "data": b64_img}}
+                                        ]
+                                    }],
+                                    "generationConfig": {"maxOutputTokens": 2048, "temperature": 0.0}
+                                }
+                                v_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key={gemini_key}"
+                                v_res = requests.post(v_url, json=payload, timeout=12)
+                                if v_res.status_code == 200:
+                                    v_data = v_res.json()
+                                    candidates = v_data.get("candidates", [])
+                                    if candidates:
+                                        parts = candidates[0].get("content", {}).get("parts", [])
+                                        v_text = "".join([p.get("text", "") for p in parts if "text" in p]).strip()
+                                        if v_text:
+                                            ocr_text = v_text
+                                            print(f"📷 [Gemini Vision OCR] Extracted {len(ocr_text)} chars from scanned page {page_number+1}")
+                        except Exception as vision_err:
+                            print(f"⚠️ Gemini Vision OCR fallback error: {vision_err}")
+
+                    if ocr_text.strip():
+                        page_text = ocr_text
 
                 if page_text.strip():
                     text_parts.append(page_text)
