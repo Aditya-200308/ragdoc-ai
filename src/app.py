@@ -704,8 +704,8 @@ with tab_qa:
     upload_col, action_col = st.columns([3.2, 1.2], gap="medium")
     with upload_col:
         uploaded_files = st.file_uploader(
-            "Upload up to 5 document(s) (.txt, .pdf, or .docx)",
-            type=["txt", "pdf", "docx"],
+            "Upload up to 5 document(s) (.pdf, .docx, .txt, scanned images)",
+            type=["pdf", "docx", "txt", "png", "jpg", "jpeg"],
             accept_multiple_files=True,
             help="Upload up to 5 document(s) (up to 500MB each) to index into ChromaDB vector database"
         )

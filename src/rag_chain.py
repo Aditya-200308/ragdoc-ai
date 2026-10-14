@@ -130,8 +130,10 @@ class RAGChain:
             text = self._read_pdf(file_path)
         elif file_extension in [".docx", ".doc"]:
             text = self._read_docx(file_path)
+        elif file_extension in [".png", ".jpg", ".jpeg", ".webp"]:
+            text = self._read_image(file_path)
         else:
-            raise ValueError(f"Unsupported file type: {file_extension}. Use .txt, .pdf, or .docx")
+            raise ValueError(f"Unsupported file type: {file_extension}. Use .pdf, .docx, .txt, .png, or .jpg")
 
         print(f"✅ Document loaded. Total characters: {len(text):,}")
 
@@ -210,8 +212,11 @@ class RAGChain:
             for page_number, page in enumerate(doc):
                 page_text = page.get_text()
 
-                # If page text is empty or too short (<30 chars), run dual-engine OCR (RapidOCR + Gemini Vision fallback)
-                if len(page_text.strip()) < 30:
+                # Detect if page is a scan, photo, or exhibit (pure scan or sparse text with embedded images)
+                page_imgs = page.get_images()
+                is_scanned = len(page_text.strip()) < 50 or (len(page_imgs) > 0 and len(page_text.strip()) < 150)
+
+                if is_scanned:
                     ocr_text = ""
                     # Tier 1: High-speed local RapidOCR
                     try:
@@ -272,12 +277,78 @@ class RAGChain:
                             print(f"⚠️ Gemini Vision OCR fallback error: {vision_err}")
 
                     if ocr_text.strip():
-                        page_text = ocr_text
+                        # If the page had some native text (like a title/header), combine it with the OCR text
+                        if page_text.strip() and page_text.strip() not in ocr_text:
+                            page_text = page_text.strip() + "\n\n" + ocr_text
+                        else:
+                            page_text = ocr_text
 
                 if page_text.strip():
                     text_parts.append(page_text)
 
         return "\n\n".join(text_parts)
+
+    def _read_image(self, file_path):
+        """
+        Reads an image file (.png, .jpg, .jpeg) using RapidOCR with Gemini Vision fallback.
+        """
+        ocr_text = ""
+        # Tier 1: Local RapidOCR
+        try:
+            from rapidocr_onnxruntime import RapidOCR
+            engine = RapidOCR()
+            with open(file_path, "rb") as f:
+                img_bytes = f.read()
+            ocr_result, _ = engine(img_bytes)
+            if ocr_result:
+                extracted = "\n".join([line[1] for line in ocr_result if line[1].strip()])
+                if extracted.strip():
+                    ocr_text = extracted.strip()
+                    print(f"📷 [RapidOCR] Extracted {len(ocr_text)} chars from image file")
+        except Exception as err:
+            print(f"⚠️ RapidOCR unavailable on image: {err}")
+
+        # Tier 2: Cloud Multimodal Vision Fallback
+        if not ocr_text.strip():
+            try:
+                gemini_key = os.environ.get("GEMINI_API_KEY")
+                if not gemini_key:
+                    try:
+                        import streamlit as st
+                        if hasattr(st, "secrets") and "GEMINI_API_KEY" in st.secrets:
+                            gemini_key = st.secrets["GEMINI_API_KEY"]
+                    except Exception:
+                        pass
+
+                if gemini_key:
+                    import base64, requests
+                    with open(file_path, "rb") as f:
+                        b64_img = base64.b64encode(f.read()).decode("utf-8")
+                    mime = "image/png" if file_path.lower().endswith(".png") else "image/jpeg"
+                    payload = {
+                        "contents": [{
+                            "parts": [
+                                {"text": "Perform precise optical character recognition (OCR) on this scanned document or image. Transcribe all text, numbers, dates, titles, and details accurately."},
+                                {"inline_data": {"mime_type": mime, "data": b64_img}}
+                            ]
+                        }],
+                        "generationConfig": {"maxOutputTokens": 2048, "temperature": 0.0}
+                    }
+                    v_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key={gemini_key}"
+                    v_res = requests.post(v_url, json=payload, timeout=12)
+                    if v_res.status_code == 200:
+                        v_data = v_res.json()
+                        candidates = v_data.get("candidates", [])
+                        if candidates:
+                            parts = candidates[0].get("content", {}).get("parts", [])
+                            v_text = "".join([p.get("text", "") for p in parts if "text" in p]).strip()
+                            if v_text:
+                                ocr_text = v_text
+                                print(f"📷 [Gemini Vision OCR] Extracted {len(ocr_text)} chars from image file")
+            except Exception as vision_err:
+                print(f"⚠️ Gemini Vision OCR error on image: {vision_err}")
+
+        return ocr_text
 
     def _read_docx(self, file_path):
         """
