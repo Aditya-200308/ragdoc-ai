@@ -132,32 +132,15 @@ class SentenceChunker:
 
     def _split_into_sentences(self, text):
         """
-        Breaks a long text into individual sentences.
-
-        📖 WHAT IS A "PRIVATE" METHOD (with underscore _)?
-        The underscore prefix is a Python convention meaning:
-        "This method is for internal use only — don't call it from outside."
-        It's still accessible, just a signal to other programmers.
-
-        📖 HOW DOES re.split() WORK?
-        re.split(pattern, text) splits text wherever the pattern matches.
-        
-        Our pattern:  r'(?<=[.!?])\s+'
-        Breaking it down:
-          (?<=[.!?]) = "look BEHIND and check if there's a . or ! or ?"
-                       This is called a "lookbehind assertion"
-          \s+        = "one or more whitespace characters (spaces, newlines)"
-        
-        So: split AFTER a sentence-ending punctuation followed by space.
-        "Hello world. How are you? I am fine." 
-        → ["Hello world.", "How are you?", "I am fine."]
+        Breaks a long text into individual semantic sentences / bullet units.
+        Handles both traditional punctuation (. ! ?) and document structures
+        such as paragraph breaks (\n\n) and bullet points (•, -, *).
         """
-        # re.split splits text using the pattern as delimiter
-        sentences = re.split(r'(?<=[.!?])\s+', text)
+        # Split on sentence ends, double newlines, or newlines preceding bullet points / markers
+        raw_parts = re.split(r'(?<=[.!?])\s+|\n\s*\n|\n(?=[•\-\*[A-Z0-9])', text)
 
         # Filter out empty strings and very short fragments (less than 10 chars)
-        # A fragment like "\n" or "   " isn't a real sentence
-        sentences = [s.strip() for s in sentences if len(s.strip()) > 10]
+        sentences = [s.strip() for s in raw_parts if len(s.strip()) > 10]
         #
         # 📖 LIST COMPREHENSION: [s.strip() for s in sentences if len(s.strip()) > 10]
         # This is a compact way to write a for loop that builds a list.

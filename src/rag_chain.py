@@ -361,7 +361,7 @@ Answer the question using ONLY the information provided in the context below.
 If the context does not contain enough information to answer the question,
 say: "I don't have enough information to answer this from the provided context."
 
-Do NOT add information from outside the context. Be concise and direct.
+Do NOT add information from outside the context. Be direct, structured, and completely EXHAUSTIVE: list all items and projects mentioned without omitting any or mixing up details between them.
 
 CONTEXT:
 {context}
@@ -422,8 +422,9 @@ Instructions:
 1. Answer the user's question using ONLY the provided document context and conversation history.
 2. If multiple documents are present in the context, compare, contrast, and synthesize details from ALL provided documents thoroughly.
 3. Be direct, structured, and cite specific document filenames when referring to information.
-4. If asked to compare documents, analyze similarities and differences using the provided context chunks from each document.
-5. Provide a complete, fully formed answer and never stop or cut off midway.
+4. When asked to summarize or provide an overview of documents, projects, experiences, or skills, you MUST be completely EXHAUSTIVE. List EVERY SINGLE project, role, and section present in the context. Never omit any project, and do NOT cherry-pick only a subset or label them 'Key Projects' while dropping others.
+5. Maintain strict section and project boundary isolation: Keep each project's features, bullet points, tech stack, and metrics strictly under their own respective project heading. Never combine or attribute one project's achievements or bullet points to another project.
+6. Provide a complete, fully formed answer and never stop or cut off midway.
 
 At the very end of your response, provide 2 to 3 logical follow-up questions the user might want to ask next based on the document content. Format them clearly under this heading:
 💡 Suggested Follow-up Questions:
