@@ -193,18 +193,18 @@ ACCURATE ANSWER:"""
 
         # Step 4: Generation via Google Gemini 3.8 Flash
         answer_text = ""
-        llm_engine_used = "Google Gemini 3.8 Flash (Cloud)"
+        llm_engine_used = "Google Gemini 4 Argon (Primary) & 3.8 Flash (Backup)"
 
         api_key_to_use = gemini_api_key or os.getenv("GEMINI_API_KEY")
 
         if api_key_to_use:
             import requests
             models_to_try = [
+                "gemini-4-argon",
+                "gemini-3.8-flash",
                 "gemini-3.5-flash-lite",
                 "gemini-3.1-flash-lite",
-                "gemini-3.8-flash",
-                "gemini-flash-latest",
-                "gemini-3.5-flash"
+                "gemini-flash-latest"
             ]
             payload = {
                 "contents": [{"parts": [{"text": prompt_text}]}],
@@ -226,7 +226,7 @@ ACCURATE ANSWER:"""
                             full_text = "".join(text_chunks).strip()
                             if full_text:
                                 answer_text = full_text
-                                llm_engine_used = f"Google Gemini 3.8 Flash ({model_name} Cloud)"
+                                llm_engine_used = f"Google Gemini 4 Argon [{model_name}]"
                                 break
                 except Exception:
                     continue
@@ -236,13 +236,13 @@ ACCURATE ANSWER:"""
                     import google.generativeai as genai
                     genai.configure(api_key=api_key_to_use)
                     model = genai.GenerativeModel(
-                        "gemini-3.8-flash",
+                        "gemini-4-argon",
                         generation_config={"max_output_tokens": 8192, "temperature": 0.2}
                     )
                     response = model.generate_content(prompt_text)
                     if response and response.text:
                         answer_text = response.text.strip()
-                        llm_engine_used = "Google Gemini 3.8 Flash (Cloud)"
+                        llm_engine_used = "Google Gemini 4 Argon (Primary) & 3.8 Flash (Backup)"
                 except Exception as e:
                     answer_text = f"Gemini generation error: {e}"
         else:

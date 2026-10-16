@@ -71,11 +71,13 @@ class RAGChain:
     """
 
     # Google Gemini 3.8 Flash model for ultra-fast, high-precision answer generation
-    GEMINI_MODEL = "gemini-3.8-flash"
+    PRIMARY_MODEL = "gemini-4-argon"
+    BACKUP_MODEL = "gemini-3.8-flash"
+    GEMINI_MODEL = "gemini-4-argon"
 
     def __init__(self, chunking_strategy="semantic", use_reranker=True):
         """
-        Sets up the complete RAG pipeline powered by Google Gemini 3.8 Flash.
+        Sets up the complete RAG pipeline powered by Google Gemini 4 Argon (Primary) and 3.8 Flash (Backup).
 
         Parameters:
             chunking_strategy:  "fixed", "sentence", "semantic", or "langchain"
@@ -401,12 +403,12 @@ class RAGChain:
 
                 # Prioritize Google Gemini 3.5 Flash Lite (~1.3s response) with ultra-fast resilient failover
         models_to_try = [
+            "gemini-4-argon",
+            "gemini-3.8-flash",
             "gemini-3.5-flash-lite",
             "gemini-3.1-flash-lite",
-            "gemini-3.8-flash",
             "gemini-flash-latest",
-            "gemini-3.5-flash",
-            "gemini-3.7-flash"
+            "gemini-3.5-flash"
         ]
 
         payload = {
@@ -440,7 +442,7 @@ class RAGChain:
             import google.generativeai as genai
             genai.configure(api_key=gemini_key)
             model = genai.GenerativeModel(
-                "gemini-3.8-flash",
+                "gemini-4-argon",
                 generation_config={"max_output_tokens": 8192, "temperature": 0.2}
             )
             response = model.generate_content(prompt)

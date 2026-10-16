@@ -544,7 +544,7 @@ def display_sources(sources):
 st.markdown("""
 <div class="top-utility-bar">
     <div class="utility-badge"><span style="font-size: 1.15rem;">🦜</span> <strong>Pipeline:</strong> <span style="color: #c084fc;">LangChain LCEL</span></div>
-    <div class="utility-badge"><span style="font-size: 1.15rem;">⚡</span> <strong>LLM Engine:</strong> <span style="color: #34d399;">Google Gemini 3.8 Flash</span></div>
+    <div class="utility-badge"><span style="font-size: 1.15rem;">⚡</span> <strong>LLM Engine:</strong> <span style="color: #34d399;">Google Gemini 4 Argon (Primary) | 3.8 Flash (Backup)</span></div>
     <div class="utility-badge"><span style="font-size: 1.15rem;">🎯</span> <strong>Retrieval:</strong> <span style="color: #38bdf8;">2-Stage Neural Re-Ranking</span></div>
     <div class="utility-badge"><span style="font-size: 1.15rem;">🗄️</span> <strong>Vector Store:</strong> <span style="color: #f472b6;">ChromaDB</span></div>
 </div>
@@ -554,11 +554,11 @@ st.markdown("""
         <span style="font-size: 3.2rem; line-height: 1; filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.6));">🧠</span>
         <span class="hero-title" style="font-size: 3.2rem; line-height: 1.1;">RAGDoc AI</span>
         <span class="hero-pill">
-            🦜 LANGCHAIN LCEL • ⚡ GEMINI 3.8 FLASH
+            🦜 LANGCHAIN LCEL • ⚡ GEMINI 4 ARGON (PRIMARY) | 3.8 FLASH (BACKUP)
         </span>
     </div>
     <div class="hero-subtitle">
-        <strong>LangChain LCEL RAG & Benchmarking Engine</strong> — Upload multi-format document(s) (PDF, DOCX, TXT), explore high-precision <strong>2-stage neural retrieval</strong> (Bi-Encoder Dense Indexing + Cross-Encoder Re-Ranking), benchmark chunking strategies (LangChain Recursive, Semantic, Sentence, Fixed), and synthesize source-grounded answers powered by <strong>Google Gemini 3.8 Flash</strong>.
+        <strong>LangChain LCEL RAG & Benchmarking Engine</strong> — Upload multi-format document(s) (PDF, DOCX, TXT), explore high-precision <strong>2-stage neural retrieval</strong> (Bi-Encoder Dense Indexing + Cross-Encoder Re-Ranking), benchmark chunking strategies (LangChain Recursive, Semantic, Sentence, Fixed), and synthesize source-grounded answers powered by <strong>Google Gemini 4 Argon (Primary) | 3.8 Flash (Backup)</strong>.
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -584,7 +584,7 @@ with st.sidebar:
         <div style="display: flex; align-items: center; gap: 0.65rem;">
             <span style="font-size: 1.35rem;">⚡</span>
             <div>
-                <div style="color: #ffffff; font-weight: 800; font-size: 0.95rem; letter-spacing: -0.01em;">Google Gemini 3.8 Flash</div>
+                <div style="color: #ffffff; font-weight: 800; font-size: 0.95rem; letter-spacing: -0.01em;">Google Gemini 4 Argon (Primary) | 3.8 Flash (Backup)</div>
                 <div style="color: #6ee7b7; font-size: 0.78rem; font-weight: 600;">Cloud Turbo • Active Engine</div>
             </div>
         </div>
@@ -818,7 +818,7 @@ with tab_qa:
                 <div style="font-size: 3.2rem; margin-bottom: 0.8rem; filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.45));">🧠</div>
                 <div style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin-bottom: 0.45rem;">What would you like to explore from your documents?</div>
                 <div style="font-size: 0.95rem; color: #cbd5e1; max-width: 540px; margin: 0 auto 1.4rem auto; line-height: 1.6;">
-                    Ask questions, compare sections across multiple files, or request in-depth summaries. Every response is synthesized by Google Gemini 3.8 Flash and grounded directly in your uploaded documents.
+                    Ask questions, compare sections across multiple files, or request in-depth summaries. Every response is synthesized by Google Gemini 4 Argon (Primary) | 3.8 Flash (Backup) and grounded directly in your uploaded documents.
                 </div>
                 <div style="display: inline-flex; gap: 0.5rem; font-size: 0.84rem; color: #c4b5fd; background: rgba(147, 51, 234, 0.18); padding: 0.45rem 1rem; border-radius: 20px; border: 1px solid rgba(168, 85, 247, 0.35);">
                     ⚡ Upload & Index your documents above, then ask below!
@@ -975,7 +975,7 @@ with tab_eval:
             best_faith = best_row["Avg Faithfulness (0-5)"]
 
             resume_bullet = (
-                f"Built enterprise RAG pipeline with LangChain LCEL and Gemini 3.8 Flash, "
+                f"Built enterprise RAG pipeline with LangChain LCEL and Gemini 4 Argon (Primary) & 3.8 Flash (Backup), "
                 f"benchmarking chunking strategies (LangChain Recursive, Semantic, Sentence, Fixed); "
                 f"{best_strategy} chunking achieved retrieval hit rate of {best_rate}% on evaluation harness "
                 f"with faithfulness score of {best_faith}/5.0. Implemented 2-stage neural retrieval "
@@ -1037,7 +1037,7 @@ with tab_about:
         <div class="flow-step">
             <div class="flow-num">5</div>
             <div class="flow-title">Grounded Generation</div>
-            <div class="flow-desc">Google Gemini 3.8 Flash synthesizes accurate answers strictly from top-5 context.</div>
+            <div class="flow-desc">Google Gemini 4 Argon (Primary) | 3.8 Flash (Backup) synthesizes accurate answers strictly from top-5 context.</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1090,7 +1090,7 @@ with tab_about:
         <div class="metric-card">
             <div style="font-size: 1.5rem; margin-bottom: 0.3rem;">⚡</div>
             <strong style="color: #f8fafc;">Cloud LLM</strong>
-            <div style="color: #6ee7b7; font-size: 0.85rem; margin-top: 0.3rem; font-weight: 700;">Gemini 3.8 Flash</div>
+            <div style="color: #6ee7b7; font-size: 0.85rem; margin-top: 0.3rem; font-weight: 700;">Gemini 4 Argon (Primary) & 3.8 Flash (Backup)</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -1126,6 +1126,6 @@ with tab_about:
     # Author Card
     st.markdown("""
     <div style="text-align: center; padding: 1.2rem; color: #a5b4fc; font-size: 0.95rem;">
-        🚀 <strong>AI Engineering Portfolio • Project #01</strong> | Powered by <strong>LangChain LCEL</strong> & <strong>Google Gemini 3.8 Flash</strong> | Developed by <strong>Aditya</strong>
+        🚀 <strong>AI Engineering Portfolio • Project #01</strong> | Powered by <strong>LangChain LCEL</strong> & <strong>Google Gemini 4 Argon (Primary) | 3.8 Flash (Backup)</strong> | Developed by <strong>Aditya</strong>
     </div>
     """, unsafe_allow_html=True)

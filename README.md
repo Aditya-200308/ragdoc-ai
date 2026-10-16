@@ -6,10 +6,10 @@
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![LangChain](https://img.shields.io/badge/Orchestration-LangChain_LCEL-1C3C3C?style=for-the-badge&logo=chainlink&logoColor=white)](https://python.langchain.com/)
 [![ChromaDB](https://img.shields.io/badge/Vector_DB-ChromaDB-8A2BE2?style=for-the-badge)](https://www.trychroma.com/)
-[![Gemini](https://img.shields.io/badge/Cloud_LLM-Gemini_3.8_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
+[![Gemini](https://img.shields.io/badge/LLM-Gemini_4_Argon_%7C_3.8_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-**A high-precision Retrieval-Augmented Generation (RAG) system built with LangChain Expression Language (LCEL), featuring 2-stage neural retrieval, Google Gemini 3.8 Flash generation, automated OCR, and chunking strategy benchmarking.**
+**A high-precision Retrieval-Augmented Generation (RAG) system built with LangChain Expression Language (LCEL), featuring 2-stage neural retrieval, Google Gemini 4 Argon generation (with 3.8 Flash backup), automated OCR, and chunking strategy benchmarking.**
 
 [🌐 Explore Live App](https://ragdoc-ai-csxavqbvdxgndkdpujkv6m.streamlit.app) • [📖 System Architecture](#-system-architecture) • [🚀 Quickstart](#-quickstart-guide) • [📊 Evaluation](#-evaluation--benchmarking)
 
@@ -20,7 +20,7 @@
 ## 🌟 Key Features
 
 - **🦜 Pure LangChain LCEL Pipeline**: **LangChain Expression Language (LCEL)** architecture orchestrating prompt templates, document transformation, retriever chains, and Gemini inference.
-- **⚡ Google Gemini 3.8 Flash**: Ultra-fast cloud inference synthesizing source-grounded answers strictly from retrieved context.
+- **⚡ Google Gemini 4 Argon (Primary) & 3.8 Flash (Backup)**: Ultra-fast cloud inference synthesizing source-grounded answers strictly from retrieved context.
 - **📂 Multi-Format & Multi-Document Ingestion**: Upload and index up to 5 documents simultaneously (`.pdf`, `.docx`, `.txt`).
 - **📷 Scanned Document & Photo OCR**: Automated fallback to **`RapidOCR` (ONNX Runtime)** to extract text from scanned PDFs, ID cards, and certificates with zero digital text.
 - **✂️ 4-Way Chunking Strategy Benchmarking**:
@@ -54,7 +54,7 @@ graph TD
     I --> J[⚖️ Fair Multi-Document Balanced Selection]
     J --> K[📋 Top-5 Re-Ranked Context Assembly]
     
-    K --> L[⚡ Generation: Google Gemini 3.8 Flash (LCEL Chain)]
+    K --> L[⚡ Generation: Google Gemini 4 Argon (Primary) & 3.8 Flash (Backup) [LCEL Chain]]
     L --> M[💬 Grounded Answer + Source Citations + Follow-Up Suggestions]
 ```
 
@@ -80,7 +80,7 @@ The built-in evaluation harness benchmarks how different chunking strategies imp
 | **Vector Database** | ChromaDB | Vector storage and cosine similarity index |
 | **Embedding Model** | `sentence-transformers/all-MiniLM-L6-v2` | 384-dimensional dense vector embeddings |
 | **Re-Ranker Model** | `cross-encoder/ms-marco-MiniLM-L-6-v2` | Cross-attention query-document relevance scoring |
-| **LLM Engine** | Google Gemini 3.8 Flash (LangChain LCEL) | Ultra-fast cloud generative inference with strict source grounding |
+| **LLM Engine** | Google Gemini 4 Argon (Primary) & 3.8 Flash (Backup) [LangChain LCEL] | Ultra-fast cloud generative inference with strict source grounding |
 | **OCR Engine** | `rapidocr-onnxruntime` | Text extraction from scanned documents and images |
 | **Document Parsers** | PyMuPDF (`fitz`), `python-docx` | PDF and Word document extraction |
 
@@ -143,7 +143,7 @@ The built-in evaluation harness benchmarks how different chunking strategies imp
 ```markdown
 - Architected and deployed RAGDoc AI, an advanced RAG engine with 2-stage retrieval (Bi-Encoder + Cross-Encoder Re-Ranking) achieving 100% retrieval hit rate and 4.6/5 faithfulness on benchmark evaluations.
 - Engineered multi-format document ingestion pipeline (.pdf, .docx, .txt) with automated RapidOCR fallback for scanned documents and ID cards.
-- Implemented an enterprise LangChain LCEL pipeline with 4-way chunking strategy benchmarking and Google Gemini 3.8 Flash inference.
+- Implemented an enterprise LangChain LCEL pipeline with 4-way chunking strategy benchmarking and Google Gemini 4 Argon (Primary) & 3.8 Flash (Backup) inference.
 ```
 
 ---

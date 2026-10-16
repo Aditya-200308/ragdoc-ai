@@ -49,7 +49,7 @@ This guide walks you through deploying your **RAGDoc AI** app to **Streamlit Com
 
 ## 🌐 How The Deployed App Works Online:
 
-- **Local Machine**: Uses **Google Gemini 3.8 Flash**.
+- **Local Machine**: Uses **Google Gemini 4 Argon (Primary) & 3.8 Flash (Backup)**.
 - **Online Web App**: Automatically routes LLM generation through **Gemini Flash (Free API)** via Cloud Secrets, while ChromaDB, PyMuPDF, and RapidOCR run embedded on the server!
 
 ---
