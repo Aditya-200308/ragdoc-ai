@@ -6,7 +6,6 @@
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![LangChain](https://img.shields.io/badge/Orchestration-LangChain_LCEL-1C3C3C?style=for-the-badge&logo=chainlink&logoColor=white)](https://python.langchain.com/)
 [![ChromaDB](https://img.shields.io/badge/Vector_DB-ChromaDB-8A2BE2?style=for-the-badge)](https://www.trychroma.com/)
-[![Ollama](https://img.shields.io/badge/Local_LLM-Llama_3.2-black?style=for-the-badge&logo=meta&logoColor=white)](https://ollama.com/)
 [![Gemini](https://img.shields.io/badge/Cloud_LLM-Gemini_3.8_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
@@ -55,12 +54,8 @@ graph TD
     I --> J[⚖️ Fair Multi-Document Balanced Selection]
     J --> K[📋 Top-5 Re-Ranked Context Assembly]
     
-    K --> L{🤖 Active LLM Engine}
-    L -->|Local Machine| M[🦙 Ollama: Llama 3.2 3B]
-    L -->|Cloud Web App| N[⚡ Google Gemini API: Flash]
-    
-    M --> O[💬 Grounded Answer + Source Citations + Follow-Up Suggestions]
-    N --> O
+    K --> L[⚡ Generation: Google Gemini 3.8 Flash (LCEL Chain)]
+    L --> M[💬 Grounded Answer + Source Citations + Follow-Up Suggestions]
 ```
 
 ---
@@ -85,8 +80,7 @@ The built-in evaluation harness benchmarks how different chunking strategies imp
 | **Vector Database** | ChromaDB | Vector storage and cosine similarity index |
 | **Embedding Model** | `sentence-transformers/all-MiniLM-L6-v2` | 384-dimensional dense vector embeddings |
 | **Re-Ranker Model** | `cross-encoder/ms-marco-MiniLM-L-6-v2` | Cross-attention query-document relevance scoring |
-| **Local LLM** | Ollama (`llama3.2`) | Local on-device generation |
-| **Cloud LLM** | Google Gemini API (`gemini-flash-latest`) | Scalable zero-install cloud fallback |
+| **LLM Engine** | Google Gemini 3.8 Flash (LangChain LCEL) | Ultra-fast cloud generative inference with strict source grounding |
 | **OCR Engine** | `rapidocr-onnxruntime` | Text extraction from scanned documents and images |
 | **Document Parsers** | PyMuPDF (`fitz`), `python-docx` | PDF and Word document extraction |
 
@@ -94,7 +88,7 @@ The built-in evaluation harness benchmarks how different chunking strategies imp
 
 ## 🚀 Quickstart Guide
 
-### 💻 Local Run (100% Free & Offline with Ollama)
+### 💻 Local Run
 
 1. **Clone the repository**:
    ```bash
@@ -116,11 +110,12 @@ The built-in evaluation harness benchmarks how different chunking strategies imp
    pip install -r requirements.txt
    ```
 
-4. **Pull and start local Llama 3.2**:
+4. **Set up environment variables**:
+   Create a `.env` file with your Gemini API key:
    ```bash
-   ollama pull llama3.2
-   ollama serve
+   GEMINI_API_KEY=your_gemini_api_key_here
    ```
+   ```bash
 
 5. **Launch the web application**:
    ```bash

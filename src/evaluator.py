@@ -14,7 +14,7 @@
 #      "Did the RAG system retrieve the chunk containing the answer?"
 #      (If we never find the right chunk, the LLM can't possibly answer correctly)
 # 2. FAITHFULNESS SCORE (0 to 5)
-#      We ask Ollama: "Is this answer based on the retrieved context,
+#      We ask Google Gemini: "Is this answer based on the retrieved context,
 #      or did the AI make something up?"
 #      This catches hallucination.
 #
@@ -64,13 +64,13 @@ class Evaluator:
             eval_dataset_path: path to eval/qa_dataset.json
             document_path:     path to data/ai_fundamentals.txt
 
-        📖 No API key needed — uses local Ollama!
+        📖 No API key needed — uses Google Gemini API!
         """
         self.eval_dataset_path = eval_dataset_path
         self.document_path = document_path
 
-        # No API key needed — Ollama runs locally!
-        # Just make sure Ollama is installed and llama3.2 is pulled.
+        # No API key needed — Google Gemini runs locally!
+# Evaluates using Google Gemini 3.8 Flash API.
 
         # Load the evaluation dataset from the JSON file
         self.qa_pairs = self._load_eval_dataset()
@@ -149,14 +149,14 @@ class Evaluator:
 
     def _grade_faithfulness(self, question, context, answer):
         """
-        Uses Ollama (Llama 3.2) to grade whether the answer is based on the context.
+        Uses Google Gemini 3.8 Flash to grade whether the answer is based on the context.
 
         0 = completely hallucinated (answer not in context at all)
         5 = perfectly faithful (answer only uses facts from context)
 
         📖 WHY USE AN LLM TO GRADE AN LLM?
         This is called "LLM-as-Judge" — a common technique in AI evaluation.
-        We use Ollama to objectively score the RAG pipeline's outputs.
+        We use Google Gemini to objectively score the RAG pipeline's outputs.
         It works because the grading task (checking faithfulness)
         is different from the answering task.
         """
@@ -238,14 +238,14 @@ Respond with ONLY a single integer (0-5). No explanation."""
         3. For each question in eval dataset:
              a. Ask RAGChain -> get answer + retrieved context
              b. Check hit rate (did retrieved context contain ground truth context?)
-             c. Grade faithfulness using Ollama
+             c. Grade faithfulness using Google Gemini
         """
         print(f"\n{'='*60}")
         print(f"📊 Evaluating strategy: {strategy_name.upper()}")
         print(f"{'='*60}")
 
         # Create a fresh RAGChain for this strategy
-        # RAGChain ties together: chunker + embedder + retriever + Ollama (local!)
+        # RAGChain ties together: chunker + embedder + retriever + Google Gemini
         rag = RAGChain(
             chunking_strategy=strategy_name,
             use_reranker=True

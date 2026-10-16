@@ -43,10 +43,10 @@ def main():
 
     # ── RUN EVALUATION ────────────────────────────────────────
     results_df = Evaluator.evaluate_uploaded_docs(file_paths=doc_paths)
-    print("\n⚡ Starting evaluation using local Ollama (Llama 3.2)...")
+    print("\n⚡ Starting evaluation using Google Gemini 3.8 Flash...")
     print("   This will take 5-15 minutes.")
     print("   Each of 30 questions × 3 strategies = 90 total retrievals")
-    print("   Plus local Ollama calls for faithfulness grading\n")
+    print("   Plus Google Gemini calls for faithfulness grading\n")
 
     evaluator = Evaluator(
         eval_dataset_path=eval_path,
