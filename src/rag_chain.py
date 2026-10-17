@@ -264,7 +264,7 @@ class RAGChain:
                                     }],
                                     "generationConfig": {"maxOutputTokens": 2048, "temperature": 0.0}
                                 }
-                                v_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key={gemini_key}"
+                                v_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-4-argon:generateContent?key={gemini_key}"
                                 v_res = requests.post(v_url, json=payload, timeout=12)
                                 if v_res.status_code == 200:
                                     v_data = v_res.json()
@@ -336,7 +336,7 @@ class RAGChain:
                         }],
                         "generationConfig": {"maxOutputTokens": 2048, "temperature": 0.0}
                     }
-                    v_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key={gemini_key}"
+                    v_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-4-argon:generateContent?key={gemini_key}"
                     v_res = requests.post(v_url, json=payload, timeout=12)
                     if v_res.status_code == 200:
                         v_data = v_res.json()
@@ -405,10 +405,7 @@ class RAGChain:
         models_to_try = [
             "gemini-4-argon",
             "gemini-3.8-flash",
-            "gemini-3.5-flash-lite",
-            "gemini-3.1-flash-lite",
-            "gemini-flash-latest",
-            "gemini-3.5-flash"
+            "gemini-flash-latest"
         ]
 
         payload = {
